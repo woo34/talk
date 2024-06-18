@@ -8,6 +8,6 @@ public class ChatController {
 
     @GetMapping("/")
     public String chat() {
-        return "chat";
+        return "index";
     }
 }
