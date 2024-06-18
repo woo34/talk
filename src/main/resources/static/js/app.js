@@ -1,23 +1,51 @@
 document.addEventListener("DOMContentLoaded", function() {
-    var socket = new WebSocket("ws://localhost:8080/chat");
+    const chatMessages = document.getElementById('chat-messages');
+    const messageInput = document.getElementById('message-input');
+    const sendButton = document.getElementById('send-button');
 
-    var messageInput = document.getElementById("message-input");
-    var sendButton = document.getElementById("send-button");
-    var chatMessages = document.getElementById("chat-messages");
+    let socket = new WebSocket("ws://localhost:8080/chat");
+
+    socket.onopen = function(event) {
+        console.log("Connected to WebSocket server.");
+    };
 
     socket.onmessage = function(event) {
-        var message = JSON.parse(event.data);
-        var messageElement = document.createElement("div");
-        messageElement.textContent = message.sender + ": " + message.content;
-        chatMessages.appendChild(messageElement);
+        console.log("Received message from server:", event.data);
+        displayMessage(JSON.parse(event.data));
     };
 
-    sendButton.onclick = function() {
-        var message = {
-            sender: "User",
-            content: messageInput.value
-        };
-        socket.send(JSON.stringify(message));
-        messageInput.value = "";
+    socket.onclose = function(event) {
+        console.log("Disconnected from WebSocket server.");
     };
+
+    socket.onerror = function(error) {
+        console.log("WebSocket error:", error);
+    };
+
+    sendButton.addEventListener('click', function() {
+        let messageContent = messageInput.value;
+        if (messageContent.trim() !== "") {
+            let message = {
+                chatroomId: "1",
+                sender: "user1",
+                message: messageContent
+            };
+            socket.send(JSON.stringify(message));
+            displayMessage(message);
+            messageInput.value = '';
+        }
+    });
+
+    messageInput.addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+            sendButton.click();
+        }
+    });
+
+    function displayMessage(message) {
+        let messageElement = document.createElement('div');
+        messageElement.textContent = message.sender + ": " + message.message;
+        chatMessages.appendChild(messageElement);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
 });

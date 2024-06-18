@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat Room</title>
+    <script src="/js/app.js"></script>
+    <style>
+        #chat {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        #chat-messages {
+            border: 1px solid #ccc;
+            padding: 10px;
+            height: 300px;
+            overflow-y: scroll;
+            margin-bottom: 10px;
+        }
+        #message-input {
+            width: calc(100% - 80px);
+        }
+        #send-button {
+            width: 60px;
+        }
+    </style>
+</head>
+<body>
+<h1>Chat Room</h1>
+<div id="chat">
+    <div id="chat-messages"></div>
+    <input type="text" id="message-input" placeholder="Type a message..." />
+    <button id="send-button">Send</button>
+</div>
+</body>
+</html>

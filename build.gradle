@@ -20,6 +20,15 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	// SLF4J API
+	implementation 'org.slf4j:slf4j-api:1.7.30'
+
+	// Logback Classic
+	implementation 'ch.qos.logback:logback-classic:1.2.3'
+
+	// Optional: Remove slf4j-simple if it exists
+	// implementation 'org.slf4j:slf4j-simple:1.7.30'
 }
 
 tasks.named('test') {

@@ -16,8 +16,14 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.talk.model.ChatMessage;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 @Service
 public class ChatWebSocketHandler extends TextWebSocketHandler {
+    // Logger 변수 선언
+    private static final Logger logger = LoggerFactory.getLogger(ChatWebSocketHandler.class);
 
     private final ObjectMapper objectMapper = new ObjectMapper();
     private RedisTemplate<String, Object> redisTemplate;
@@ -36,6 +42,8 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+        // 소켓 연결 확인
+        logger.info("{} 연결됨", session.getId());
         sessions.add(session);
     }
 
@@ -43,6 +51,9 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         ChatMessage chatMessage = objectMapper.readValue(message.getPayload(), ChatMessage.class);
         String jsonMessage = objectMapper.writeValueAsString(chatMessage);
+        logger.info("jsonMessage {}", jsonMessage);
+        // 로그 추가
+        logger.info("Publishing message to Redis topic: {}", topic.getTopic());
         redisTemplate.convertAndSend(topic.getTopic(), jsonMessage);
     }
 
