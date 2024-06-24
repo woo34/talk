@@ -11,10 +11,10 @@ import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
 @ComponentScan(basePackages = "com.talk")
-public class ChatApplication {
+public class TalkApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ChatApplication.class, args);
+		SpringApplication.run(TalkApplication.class, args);
 	}
 
     @Bean

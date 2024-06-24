@@ -1,11 +1,19 @@
 package com.talk.controller;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.talk.model.Users;
 import com.talk.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -24,8 +32,8 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public Users getUserById(@PathVariable Long id) {
-        return userService.getUserById(id);
+    public Users getUserById(@PathVariable String userId) {
+        return userService.getUserById(userId);
     }
 
     @PostMapping
@@ -33,14 +41,14 @@ public class UserController {
         return userService.saveUser(user);
     }
 
-    @PutMapping("/{id}")
-    public Users updateUser(@PathVariable Long id, @RequestBody Users user) {
-        user.setId(id);
+    @PutMapping("/{userId}")
+    public Users updateUser(@PathVariable String userId, @RequestBody Users user) {
+        user.setUserId(userId);
         return userService.saveUser(user);
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
+    @DeleteMapping("/{userId}")
+    public void deleteUser(@PathVariable String userId) {
+        userService.deleteUser(userId);
     }
 }
