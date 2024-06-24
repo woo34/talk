@@ -1,16 +1,25 @@
 package com.talk.service;
 
-import com.talk.model.Users;
-import com.talk.repository.UserRepository;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.talk.model.Users;
+import com.talk.repository.UserRepository;
 
 @Service
 public class UserService {
-
+	// 생성자 주입방식
+//	1. 불변성(final)
+//	2. 테스트 용이성
+//	3. 순환 의존성 방지
+//	4. NPE 방지
     private final UserRepository userRepository;
+    
+//    // 필드 주입방식
+//    @Autowired
+//    private UserRepository userRepository;
 
     @Autowired
     public UserService(UserRepository userRepository) {
@@ -21,15 +30,15 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public Users getUserById(Long id) {
-        return userRepository.findById(id).orElse(null);
+    public Users getUserById(String userId) {
+        return userRepository.findById(userId).orElse(null);
     }
 
     public Users saveUser(Users user) {
         return userRepository.save(user);
     }
 
-    public void deleteUser(Long id) {
-        userRepository.deleteById(id);
+    public void deleteUser(String userId) {
+        userRepository.deleteById(userId);
     }
 }
