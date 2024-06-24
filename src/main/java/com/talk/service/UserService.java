@@ -41,4 +41,19 @@ public class UserService {
     public void deleteUser(String userId) {
         userRepository.deleteById(userId);
     }
+
+    public boolean checkUser(String userId, String password) {
+        // 2가지 방법중 하나 사용
+        Users user = userRepository.findById(userId).orElse(null);
+        if (user != null && user.getUserPwd().equals(password)) {
+            return true;
+        }
+
+        Users user2 = userRepository.findByUserIdAndUserPwd(userId, password).orElse(null);
+        if (user2 != null) {
+            return true;
+        }
+
+        return false;
+    }
 }

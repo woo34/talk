@@ -14,7 +14,6 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.talk.model.ChatMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
