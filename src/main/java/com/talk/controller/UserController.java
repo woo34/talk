@@ -30,6 +30,10 @@ public class UserController {
     public List<Users> getAllUsers() {
         return userService.getAllUsers();
     }
+//    @RequestMapping("/")
+//    public String chat() {
+//        return "index";
+//    }
 
     @GetMapping("/{id}")
     public Users getUserById(@PathVariable String userId) {

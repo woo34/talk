@@ -1,7 +1,6 @@
 package com.talk.redis;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.talk.model.ChatMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
