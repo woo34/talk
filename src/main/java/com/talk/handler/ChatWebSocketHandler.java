@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.talk.model.Messages;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
@@ -48,7 +49,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        ChatMessage chatMessage = objectMapper.readValue(message.getPayload(), ChatMessage.class);
+        Messages chatMessage = objectMapper.readValue(message.getPayload(), Messages.class);
         String jsonMessage = objectMapper.writeValueAsString(chatMessage);
         logger.info("jsonMessage {}", jsonMessage);
         // 로그 추가

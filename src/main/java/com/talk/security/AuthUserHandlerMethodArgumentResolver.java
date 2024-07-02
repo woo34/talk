@@ -3,6 +3,7 @@ package com.talk.security;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.talk.model.Users;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebArgumentResolver;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -10,7 +11,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import com.talk.vo.Member;
+
 
 public class AuthUserHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
 
@@ -52,7 +53,7 @@ public class AuthUserHandlerMethodArgumentResolver implements HandlerMethodArgum
 		}
 		
 		//파라미터 타입이 UserVo가 아님
-		if(parameter.getParameterType().equals(Member.class) == false) {
+		if(parameter.getParameterType().equals(Users.class) == false) {
 			return false;
 		}
 		
