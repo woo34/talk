@@ -4,10 +4,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.talk.model.Users;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import com.talk.vo.Member;
+
 
 // extends HandlerInterceptorAdapter -> spring 5.3 버전 이상에서는 HandlerInterceptorAdapter를 사용하는 대신 HandlerInterceptor를 implements 하는 방식으로 바꿔었다고 한다.
 // implements HandlerInterceptor -> Interceptor를 커스텀 할때 사용
@@ -56,7 +57,7 @@ public class AuthInterceptor implements HandlerInterceptor{
 				response.sendRedirect(request.getContextPath() + "/user/login");
 				return false;
 			}
-			Member authUser = (Member)session.getAttribute("authUser");
+			Users authUser = (Users)session.getAttribute("authUser");
 			if(authUser == null) {
 				response.sendRedirect(request.getContextPath() + "/user/login");
 				return false;
@@ -66,7 +67,7 @@ public class AuthInterceptor implements HandlerInterceptor{
 			String role = auth.role();
 			
 			//8. @Auth의 role이 "USER" 인 경우, authUser의 role은 상관없다.
-			if(role.equals(authUser.getRole())) {
+			if(role.equals(authUser.getType())) {
 				return true;
 			}
 			else{
