@@ -4,10 +4,13 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.talk.model.Messages;
+import com.talk.redis.RedisSubscriber;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
+import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -28,12 +31,23 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private RedisTemplate<String, Object> redisTemplate;
     private ChannelTopic topic;
+    private RedisMessageListenerContainer redisMessageListener;
+    private RedisSubscriber redisSubscriber;
+
     private final Set<WebSocketSession> sessions = Collections.synchronizedSet(new HashSet<>());
 
     @Autowired
     public void setRedisTemplate(RedisTemplate<String, Object> redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
+
+    @Autowired
+    public void setRedisMessageListenerContainer(RedisMessageListenerContainer redisMessageListener){
+        this.redisMessageListener = redisMessageListener;
+    }
+
+    @Autowired
+    public void setRedisSubscriber(RedisSubscriber redisSubscriber) {this.redisSubscriber = redisSubscriber;}
 
     @Autowired
     public void setTopic(ChannelTopic topic) {
@@ -49,11 +63,18 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+
         Messages chatMessage = objectMapper.readValue(message.getPayload(), Messages.class);
+        if(session.getId() != null && !"".equals(session.getId())){
+            chatMessage.setSession(session.getId());
+        }
         String jsonMessage = objectMapper.writeValueAsString(chatMessage);
-        logger.info("jsonMessage {}", jsonMessage);
-        // 로그 추가
+        topic = topic.of(String.valueOf(chatMessage.getRoomId()));
         logger.info("Publishing message to Redis topic: {}", topic.getTopic());
+        logger.info("jsonMessage {}", jsonMessage);
+
+        redisMessageListener.addMessageListener(redisSubscriber, topic);
+        //publish
         redisTemplate.convertAndSend(topic.getTopic(), jsonMessage);
     }
 
@@ -62,11 +83,12 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         sessions.remove(session);
     }
 
-    public void broadcastMessage(String message) {
+    public void broadcastMessage(Messages message) throws JsonProcessingException {
         for (WebSocketSession session : sessions) {
-            if (session.isOpen()) {
+            if (session.isOpen() && !message.getSession().equals(session.getId())) {
+                String jsonMessage = objectMapper.writeValueAsString(message);
                 try {
-                    session.sendMessage(new TextMessage(message));
+                    session.sendMessage(new TextMessage(jsonMessage));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -11,8 +11,10 @@ import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Component;
 
 import com.talk.handler.ChatWebSocketHandler;
+import org.springframework.web.socket.WebSocketSession;
 
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class RedisSubscriber implements MessageListener {
@@ -34,8 +36,11 @@ public class RedisSubscriber implements MessageListener {
         logger.info("Received message from Redis: {}", msg);
         try {
             Messages chatMessage = objectMapper.readValue(msg, Messages.class);
-            String jsonMessage = objectMapper.writeValueAsString(chatMessage);
-            chatWebSocketHandler.broadcastMessage(jsonMessage);
+//            String context= chatMessage.getContext();
+//            chatWebSocketHandler.broadcastMessage(context);
+
+//            String jsonMessage = objectMapper.writeValueAsString(chatMessage);
+            chatWebSocketHandler.broadcastMessage(chatMessage);
 
 //            saveMessageToDatabase(jsonMessage);
         } catch (Exception e) {
