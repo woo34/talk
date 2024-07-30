@@ -39,8 +39,10 @@ public class RedisConfig {
 
     @Bean
     public ChannelTopic topic() {
-        return new ChannelTopic("chatroom");
+        return ChannelTopic.of("chatroom");
+//        return new ChannelTopic("chatroom");
     }
+    //  해당 Bean이 꼭 필요한가 연구해보기
 
     @Bean
     public RedisMessageListenerContainer redisContainer(RedisConnectionFactory connectionFactory, MessageListenerAdapter listenerAdapter, ChannelTopic topic) {

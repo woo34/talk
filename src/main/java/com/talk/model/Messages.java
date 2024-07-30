@@ -20,6 +20,9 @@ public class Messages {
     @Column(name = "CONTEXT", nullable = false, length = 200)
     private String context;
 
+    @Column(name = "SESSION", nullable = false, length = 200)
+    private String session;
+
     @Temporal(TemporalType.DATE)
     @Column(name = "INSERT_DTS")
     private Date insertDts;
@@ -56,6 +59,14 @@ public class Messages {
         this.context = context;
     }
 
+    public String getSession() {
+        return session;
+    }
+
+    public void setSession(String session) {
+        this.session = session;
+    }
+
     public Date getInsertDts() {
         return insertDts;
     }
@@ -63,4 +74,5 @@ public class Messages {
     public void setInsertDts(Date insertDts) {
         this.insertDts = insertDts;
     }
+
 }
