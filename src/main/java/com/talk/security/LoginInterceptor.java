@@ -1,7 +1,13 @@
 package com.talk.security;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
+import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -9,6 +15,7 @@ import javax.servlet.http.HttpSession;
 import com.talk.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -31,9 +38,14 @@ public class LoginInterceptor implements HandlerInterceptor {
 			throws Exception {
 		try {
 			System.out.println("Pre Handle method is Calling: " + request.getRequestURI());
-
 			String userId = request.getParameter("userId");
 			String password = request.getParameter("password");
+
+			ServletInputStream inputStream = request.getInputStream();
+			String messageBody = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
+
+			System.out.println("messageBody = " + messageBody);
+
 
 			// 사용자 인증
 			if (userId != null && password != null && userService.checkUser(userId, password)) {
